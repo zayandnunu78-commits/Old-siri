@@ -1,0 +1,26 @@
+<!--
+  InfoPlist-Additions.xml
+
+  Modern Xcode projects (the "no Info.plist file" template) manage these
+  as "Custom iOS Target Properties" in the target's Info tab rather than a
+  standalone file. Add each key below there, or paste these entries into
+  your Info.plist's top-level <dict> if your project uses one. See
+  README.md → "Create the Xcode project" for exact steps.
+-->
+<plist>
+<dict>
+    <!-- Required: shown the first time the app asks to record audio. -->
+    <key>NSMicrophoneUsageDescription</key>
+    <string>Classic Assistant uses the microphone to hear what you say when you tap the mic button.</string>
+
+    <!-- Required: shown the first time the app asks to transcribe speech. -->
+    <key>NSSpeechRecognitionUsageDescription</key>
+    <string>Classic Assistant uses speech recognition to turn what you say into text so it can respond.</string>
+
+    <!-- Portrait-first, per the design brief; landscape can be enabled later. -->
+    <key>UISupportedInterfaceOrientations</key>
+    <array>
+        <string>UIInterfaceOrientationPortrait</string>
+    </array>
+</dict>
+</plist>

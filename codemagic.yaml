@@ -1,0 +1,41 @@
+workflows:
+  ios-classic-assistant:
+    name: Classic Assistant - iOS Build
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+
+    integrations:
+      app_store_connect: codemagic_api_key
+
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.zay.classicassistant
+      vars:
+        XCODE_PROJECT: ClassicAssistant.xcodeproj
+        XCODE_SCHEME: ClassicAssistant
+      xcode: latest
+
+    scripts:
+      - name: Install XcodeGen
+        script: brew install xcodegen
+
+      - name: Generate Xcode project from project.yml
+        script: xcodegen generate --spec project.yml
+
+      - name: Set up automatic code signing
+        script: xcode-project use-profiles
+
+      - name: Build signed IPA
+        script: |
+          xcode-project build-ipa \
+            --project "$XCODE_PROJECT" \
+            --scheme "$XCODE_SCHEME"
+
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
+
+    # Add publishing.app_store_connect only after the first signed build is
+    # verified and you are ready to upload the archive to TestFlight.

@@ -1,0 +1,46 @@
+name: ClassicAssistant
+options:
+  bundleIdPrefix: com.zay.classicassistant
+  deploymentTarget:
+    iOS: "16.0"
+  createIntermediateGroups: true
+configs:
+  Debug: debug
+  Release: release
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    IPHONEOS_DEPLOYMENT_TARGET: "16.0"
+    TARGETED_DEVICE_FAMILY: "1"
+    SUPPORTS_MACCATALYST: NO
+    ENABLE_BITCODE: NO
+targets:
+  ClassicAssistant:
+    type: application
+    platform: iOS
+    deploymentTarget: "16.0"
+    sources:
+      - path: ClassicAssistant
+    resources:
+      - path: ClassicAssistant/Assets.xcassets
+    info:
+      path: Generated-Info.plist
+      properties:
+        CFBundleDisplayName: Classic Assistant
+        UILaunchScreen: {}
+        NSMicrophoneUsageDescription: Classic Assistant uses the microphone to hear what you say when you tap the mic button.
+        NSSpeechRecognitionUsageDescription: Classic Assistant uses speech recognition to turn what you say into text so it can respond.
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.zay.classicassistant
+        PRODUCT_NAME: Classic Assistant
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        CODE_SIGN_STYLE: Automatic
+        DEVELOPMENT_TEAM: "$(DEVELOPMENT_TEAM)"
+    scheme:
+      testTargets: []
+      gatherCoverageData: false
