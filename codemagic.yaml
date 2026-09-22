@@ -1,0 +1,57 @@
+workflows:
+  ios-classic-assistant:
+    name: Classic Assistant - iOS Build
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+
+    # This project ships as source only (no .xcodeproj is committed to the
+    # repo), so before anything else we generate one on the build machine
+    # from project.yml using XcodeGen. See the "generate the project" step
+    # below.
+    integrations:
+      app_store_connect: codemagic_api_key
+      # ^ Replace "codemagic_api_key" with the name you give your App Store
+      # Connect API key integration under Codemagic > Team settings >
+      # Integrations > App Store Connect. This is what lets Codemagic sign
+      # the build automatically without you ever pasting a password,
+      # certificate, or key into this file.
+
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.zay.classicassistant
+        # ^ Must exactly match PRODUCT_BUNDLE_IDENTIFIER in project.yml
+        # and an App ID registered to your Apple Developer account.
+      vars:
+        XCODE_PROJECT: "ClassicAssistant.xcodeproj"
+        XCODE_SCHEME: "ClassicAssistant"
+      xcode: latest
+      cocoapods: default
+
+    scripts:
+      - name: Install XcodeGen
+        script: |
+          brew install xcodegen
+
+      - name: Generate Xcode project from project.yml
+        script: |
+          xcodegen generate --spec project.yml
+
+      - name: Set up automatic code signing
+        script: |
+          xcode-project use-profiles
+
+      - name: Build .ipa for distribution
+        script: |
+          xcode-project build-ipa \
+            --project "$XCODE_PROJECT" \
+            --scheme "$XCODE_SCHEME"
+
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
+
+    # No `publishing:` block yet on purpose — this workflow's only job is
+    # to prove the project compiles and signs. Add a `publishing.app_store_connect`
+    # block once this goes green to ship straight to TestFlight.
